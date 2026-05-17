@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages with Tests
 
 on:
   push:
-    [cite_start]branches: ["main", "master"] # Тригер on: push запускає workflow при кожному push [cite: 213]
+    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -21,16 +21,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          [cite_start]cache: 'npm' # Кешує папку node_modules між запусками [cite: 215]
+          cache: 'npm'
       - name: Встановлення залежностей
-        [cite_start]run: npm ci # Строго дотримується файлу package-lock.json [cite: 216]
+        run: npm ci
       - name: Встановлення браузерів Playwright
         run: npx playwright install --with-deps chromium
       - name: Запуск Е2Е тестів
         run: npx playwright test
       - name: Збереження звіту Playwright
         uses: actions/upload-artifact@v4
-        [cite_start]if: always() # Зберігає артефакт навіть при падінні тестів [cite: 214]
+        if: always()
         with:
           name: playwright-report
           path: playwright-report/
@@ -38,7 +38,7 @@ jobs:
 
   deploy:
     name: Deploy to GitHub Pages
-    [cite_start]needs: test # Деплой буде заблоковано, якщо хоча б один тест впаде [cite: 209]
+    needs: test
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -54,13 +54,13 @@ jobs:
       - name: Встановлення залежностей
         run: npm ci
       - name: Збірка Vue проєкту
-        run: npm run build # Збираємо Vue проєкт у папку dist
+        run: npm run build
       - name: Налаштування GitHub Pages
         uses: actions/configure-pages@v5
       - name: Завантаження артефактів для Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Вказуємо папку dist після збірки Vue
+          path: './dist'
       - name: Деплой на GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
