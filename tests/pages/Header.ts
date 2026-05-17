@@ -11,12 +11,10 @@ export class Header {
     this.contactsLink = page.getByRole('link', { name: 'Контакти' });
   }
 
-  // Метод для навігації 
   async goto(): Promise<void> {
     await this.page.goto('/');
   }
 
-  // Допоміжний метод: натискання кнопки зміни теми 
   async toggleTheme(): Promise<void> {
     await this.themeBtn.click();
   }
